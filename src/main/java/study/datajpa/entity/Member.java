@@ -7,6 +7,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQuery;
 
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -19,6 +20,11 @@ import lombok.ToString;
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString(of = { "id", "username", "age" })
+//애플리케이션 로딩 시점에 미리 스프링이 parsing해 보기 때문에 실행 되지 않는 장점이 있다.
+@NamedQuery(
+		 name="Member.findByUsername",
+		 query="select m from Member m where m.username = :username"
+)
 public class Member {
 	
 	@Id
