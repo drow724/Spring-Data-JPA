@@ -46,14 +46,27 @@ public class MemberJpaRepositoryTest {
 		// 카운트 검증
 		long count = memberJpaRepository.count();
 		assertThat(count).isEqualTo(2);
-		
-		//변경 감지 (굳이 update문을 쓸 필요 없다)
-		//findMember1.setUsername("member!!!");
-				
+
+		// 변경 감지 (굳이 update문을 쓸 필요 없다)
+		// findMember1.setUsername("member!!!");
+
 		// 삭제 검증
 		memberJpaRepository.delete(member1);
 		memberJpaRepository.delete(member2);
 		long deletedCount = memberJpaRepository.count();
 		assertThat(deletedCount).isEqualTo(0);
 	}
+
+	@Test
+	public void findByUsernameAndAgeGreaterThan() {
+		Member m1 = new Member("AAA", 10);
+		Member m2 = new Member("AAA", 20);
+		memberJpaRepository.save(m1);
+		memberJpaRepository.save(m2);
+		List<Member> result = memberJpaRepository.findByUsernameAndAgeGreaterThan("AAA", 15);
+		assertThat(result.get(0).getUsername()).isEqualTo("AAA");
+		assertThat(result.get(0).getAge()).isEqualTo(20);
+		assertThat(result.size()).isEqualTo(1);
+	}
+
 }
