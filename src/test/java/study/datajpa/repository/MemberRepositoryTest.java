@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -157,5 +158,45 @@ public class MemberRepositoryTest {
 			System.out.println("member = " + member);
 		}
 		
+	}
+	
+	@Test
+	public void returnType() {
+		
+		Member m1 = new Member("AAA", 10);
+		Member m2 = new Member("BBB", 20);
+		
+		memberRepository.save(m1);
+		memberRepository.save(m2);
+		
+		List<Member> aaa = memberRepository.findListByUsername("AAA");
+
+		//실제 실무에서 테스트할때는 assertThat사용
+		for(Member member : aaa) {
+			System.out.println("member = " + member);
+		}
+		
+		Member findMember = memberRepository.findMemberByUsername("AAA");
+		System.out.println("findMember = " + findMember);
+		
+		Optional<Member> optionalMember = memberRepository.findOptionalByUsername("AAA");
+		System.out.println("optionalMember = " + optionalMember.get());
+		
+		
+		//List<Member> result = memberRepository.findListByUsername("ffgdfgfdsg");
+		
+		//콜렉션이 무조건 반환됨으로 안좋은 코드이다.
+		//if(result != null) {
+		//	System.out.println("result = " + result.size());
+		//}
+		
+		//System.out.println("result = " + result.size());
+		
+		//Member result = memberRepository.findMemberByUsername("ㄻㄴㄹㅇㄴㅁㄹㅇㄴ");
+		//null이 나온다
+		//System.out.println("findMember = " + result);
+		
+		Optional<Member> result = memberRepository.findOptionalByUsername("AAA");
+		System.out.println("findMember = " + result);
 	}
 }
