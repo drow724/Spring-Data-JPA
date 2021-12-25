@@ -10,14 +10,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import study.datajpa.dto.MemberDto;
 import study.datajpa.entity.Member;
+import study.datajpa.entity.Team;
 
 @SpringBootTest
 @Transactional
 public class MemberRepositoryTest {
+	
 	@Autowired
 	MemberRepository memberRepository;
 
+	@Autowired
+	TeamRepository teamRepository;
+	
 	@Test
 	public void testMember() {
 		Member member = new Member("memberA");
@@ -95,6 +101,43 @@ public class MemberRepositoryTest {
 
 		assertThat(result.get(0)).isEqualTo(m1);
 
+	}
+	
+	@Test
+	public void findUsernameList() {
+		
+		Member m1 = new Member("AAA", 10);
+		Member m2 = new Member("BBB", 20);
+		
+		memberRepository.save(m1);
+		memberRepository.save(m2);
+		
+		List<String> usernameList = memberRepository.findUsernameList();
+
+		//실제 실무에서 테스트할때는 assertThat사용
+		for(String s : usernameList) {
+			System.out.println(s);
+		}
+		
+	}
+	
+	@Test
+	public void findMemberDto() {
+		
+		Team team = new Team("teamA");
+		teamRepository.save(team);
+		
+		Member m1 = new Member("AAA", 10);
+		m1.setTeam(team);
+		memberRepository.save(m1);	
+
+		List<MemberDto> memberDto = memberRepository.findMemberDto();
+
+		//실제 실무에서 테스트할때는 assertThat사용
+		for(MemberDto dto : memberDto) {
+			System.out.println("dto = " + dto);
+		}
+		
 	}
 	
 }
