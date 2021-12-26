@@ -278,19 +278,44 @@ public class MemberRepositoryTest {
 		memberRepository.save(new Member("member1", 20, teamB));
 		em.flush();
 		em.clear();
-		
+
 		// when N + 1
 		// select Member 1
-		//List<Member> members = memberRepository.findMemberFetchJoin();
-		//List<Member> members = memberRepository.findAll();
-		//List<Member> members = memberRepository.findMemberEntityGraph();
+		// List<Member> members = memberRepository.findMemberFetchJoin();
+		// List<Member> members = memberRepository.findAll();
+		// List<Member> members = memberRepository.findMemberEntityGraph();
 		List<Member> members = memberRepository.findEntityGraphByUsername("member1");
-		
+
 		// then
 		for (Member member : members) {
-			//select Team from Team t where = ?
+			// select Team from Team t where = ?
 			member.getTeam().getName();
 		}
 	}
 
+	@Test
+	public void queryHint() throws Exception {
+		// given
+		memberRepository.save(new Member("member1", 10));
+		em.flush();
+		em.clear();
+		
+		// when
+		Member member = memberRepository.findReadOnlyByUsername("member1");
+		member.setUsername("member2");
+		
+		em.flush(); // Update Query 실행X
+	}
+	
+	@Test
+	public void lock(){
+		// given
+		memberRepository.save(new Member("member1", 10));
+		em.flush();
+		em.clear();
+		
+		// when
+		List<Member> result = memberRepository.findLockByUsername("member1");
+	
+	}
 }
