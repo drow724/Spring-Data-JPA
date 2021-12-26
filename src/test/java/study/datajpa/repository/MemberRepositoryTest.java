@@ -34,6 +34,7 @@ public class MemberRepositoryTest {
 
 	@PersistenceContext
 	EntityManager em;
+
 	@Test
 	public void testMember() {
 		Member member = new Member("memberA");
@@ -68,7 +69,7 @@ public class MemberRepositoryTest {
 		long deletedCount = memberRepository.count();
 		assertThat(deletedCount).isEqualTo(0);
 	}
-	
+
 	@Test
 	public void findByUsernameAndAgeGreaterThan() {
 		Member m1 = new Member("AAA", 10);
@@ -80,130 +81,129 @@ public class MemberRepositoryTest {
 		assertThat(result.get(0).getAge()).isEqualTo(20);
 		assertThat(result.size()).isEqualTo(1);
 	}
-	
+
 	@Test
 	public void testNamedQuery() {
-		
+
 		Member m1 = new Member("AAA", 10);
 		Member m2 = new Member("BBB", 20);
-		
+
 		memberRepository.save(m1);
 		memberRepository.save(m2);
-		
+
 		List<Member> result = memberRepository.findByUsername("AAA");
-		
+
 		Member findMember = result.get(0);
-		
+
 		assertThat(findMember).isEqualTo(m1);
 
 	}
-	
+
 	@Test
 	public void testQuery() {
-		
+
 		Member m1 = new Member("AAA", 10);
 		Member m2 = new Member("BBB", 20);
-		
+
 		memberRepository.save(m1);
 		memberRepository.save(m2);
-		
-		List<Member> result = memberRepository.findUser("AAA",10);
+
+		List<Member> result = memberRepository.findUser("AAA", 10);
 
 		assertThat(result.get(0)).isEqualTo(m1);
 
 	}
-	
+
 	@Test
 	public void findUsernameList() {
-		
+
 		Member m1 = new Member("AAA", 10);
 		Member m2 = new Member("BBB", 20);
-		
+
 		memberRepository.save(m1);
 		memberRepository.save(m2);
-		
+
 		List<String> usernameList = memberRepository.findUsernameList();
 
-		//실제 실무에서 테스트할때는 assertThat사용
-		for(String s : usernameList) {
+		// 실제 실무에서 테스트할때는 assertThat사용
+		for (String s : usernameList) {
 			System.out.println(s);
 		}
-		
+
 	}
-	
+
 	@Test
 	public void findMemberDto() {
-		
+
 		Team team = new Team("teamA");
 		teamRepository.save(team);
-		
+
 		Member m1 = new Member("AAA", 10);
 		m1.setTeam(team);
-		memberRepository.save(m1);	
+		memberRepository.save(m1);
 
 		List<MemberDto> memberDto = memberRepository.findMemberDto();
 
-		//실제 실무에서 테스트할때는 assertThat사용
-		for(MemberDto dto : memberDto) {
+		// 실제 실무에서 테스트할때는 assertThat사용
+		for (MemberDto dto : memberDto) {
 			System.out.println("dto = " + dto);
 		}
-		
+
 	}
-	
+
 	@Test
 	public void findByNames() {
-		
+
 		Member m1 = new Member("AAA", 10);
 		Member m2 = new Member("BBB", 20);
-		
+
 		memberRepository.save(m1);
 		memberRepository.save(m2);
-		
-		List<Member> result = memberRepository.findByNames(Arrays.asList("AAA","BBB"));
 
-		//실제 실무에서 테스트할때는 assertThat사용
-		for(Member member : result) {
+		List<Member> result = memberRepository.findByNames(Arrays.asList("AAA", "BBB"));
+
+		// 실제 실무에서 테스트할때는 assertThat사용
+		for (Member member : result) {
 			System.out.println("member = " + member);
 		}
-		
+
 	}
-	
+
 	@Test
 	public void returnType() {
-		
+
 		Member m1 = new Member("AAA", 10);
 		Member m2 = new Member("BBB", 20);
-		
+
 		memberRepository.save(m1);
 		memberRepository.save(m2);
-		
+
 		List<Member> aaa = memberRepository.findListByUsername("AAA");
 
-		//실제 실무에서 테스트할때는 assertThat사용
-		for(Member member : aaa) {
+		// 실제 실무에서 테스트할때는 assertThat사용
+		for (Member member : aaa) {
 			System.out.println("member = " + member);
 		}
-		
+
 		Member findMember = memberRepository.findMemberByUsername("AAA");
 		System.out.println("findMember = " + findMember);
-		
+
 		Optional<Member> optionalMember = memberRepository.findOptionalByUsername("AAA");
 		System.out.println("optionalMember = " + optionalMember.get());
-		
-		
-		//List<Member> result = memberRepository.findListByUsername("ffgdfgfdsg");
-		
-		//콜렉션이 무조건 반환됨으로 안좋은 코드이다.
-		//if(result != null) {
-		//	System.out.println("result = " + result.size());
-		//}
-		
-		//System.out.println("result = " + result.size());
-		
-		//Member result = memberRepository.findMemberByUsername("ㄻㄴㄹㅇㄴㅁㄹㅇㄴ");
-		//null이 나온다
-		//System.out.println("findMember = " + result);
-		
+
+		// List<Member> result = memberRepository.findListByUsername("ffgdfgfdsg");
+
+		// 콜렉션이 무조건 반환됨으로 안좋은 코드이다.
+		// if(result != null) {
+		// System.out.println("result = " + result.size());
+		// }
+
+		// System.out.println("result = " + result.size());
+
+		// Member result = memberRepository.findMemberByUsername("ㄻㄴㄹㅇㄴㅁㄹㅇㄴ");
+		// null이 나온다
+		// System.out.println("findMember = " + result);
+
 		Optional<Member> result = memberRepository.findOptionalByUsername("AAA");
 		System.out.println("findMember = " + result);
 	}
@@ -244,25 +244,53 @@ public class MemberRepositoryTest {
 		memberRepository.save(new Member("member3", 20));
 		memberRepository.save(new Member("member4", 21));
 		memberRepository.save(new Member("member5", 40));
-		
+
 		// when
 		// 영속성 컨텍스트를 무시하고 bulk연산을 해버림
 		int resultCount = memberRepository.bulkAgePlus(20);
-		
-		//age는 41살이 아닌 40살이 나온다.
+
+		// age는 41살이 아닌 40살이 나온다.
 //		List<Member> result = memberRepository.findByUsername("member5");
 //		Member member5 = result.get(0);
 //		System.out.println("member5 = " + member5);
-		
+
 //		em.flush();
 //		em.clear();
-		
+
 		List<Member> result = memberRepository.findByUsername("member5");
 		Member member5 = result.get(0);
 		System.out.println("member5 = " + member5);
-		
+
 		// then
 		assertThat(resultCount).isEqualTo(3);
 	}
-	
+
+	@Test
+	public void findMemberLazy() throws Exception {
+		// given
+		// member1 -> teamA
+		// member2 -> teamB
+		Team teamA = new Team("teamA");
+		Team teamB = new Team("teamB");
+		teamRepository.save(teamA);
+		teamRepository.save(teamB);
+		memberRepository.save(new Member("member1", 10, teamA));
+		memberRepository.save(new Member("member1", 20, teamB));
+		em.flush();
+		em.clear();
+		
+		// when N + 1
+		// select Member 1
+		//List<Member> members = memberRepository.findMemberFetchJoin();
+		//List<Member> members = memberRepository.findAll();
+		//List<Member> members = memberRepository.findMemberEntityGraph();
+		List<Member> members = memberRepository.findEntityGraphByUsername("member1");
+		
+		// then
+		for (Member member : members) {
+			//select Team from Team t where = ?
+			member.getTeam().getName();
+		}
+	}
+
 }
