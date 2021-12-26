@@ -34,7 +34,7 @@ public class MemberRepositoryTest {
 
 	@PersistenceContext
 	EntityManager em;
-	
+
 	@Test
 	public void testMember() {
 		Member member = new Member("memberA");
@@ -299,29 +299,30 @@ public class MemberRepositoryTest {
 		memberRepository.save(new Member("member1", 10));
 		em.flush();
 		em.clear();
-		
+
 		// when
 		Member member = memberRepository.findReadOnlyByUsername("member1");
 		member.setUsername("member2");
-		
+
 		em.flush(); // Update Query 실행X
 	}
-	
+
 	@Test
-	public void lock(){
+	public void lock() {
 		// given
 		memberRepository.save(new Member("member1", 10));
 		em.flush();
 		em.clear();
-		
+
 		// when
 		List<Member> result = memberRepository.findLockByUsername("member1");
-	
+
 	}
-	
+
 	@Test
-	public void callCustom(){
+	public void callCustom() {
 		// given
 		List<Member> result = memberRepository.findMemberCustom();
 	}
+
 }
