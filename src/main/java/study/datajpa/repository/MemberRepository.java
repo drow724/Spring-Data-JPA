@@ -18,10 +18,12 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.QueryHints;
 import org.springframework.data.repository.query.Param;
 
+import com.sun.source.tree.MemberReferenceTree;
+
 import study.datajpa.dto.MemberDto;
 import study.datajpa.entity.Member;
 
-public interface MemberRepository extends JpaRepository<Member, Long> {
+public interface MemberRepository extends JpaRepository<Member, Long>, MemberRepositoryCustom{
 
 	// @Query(name = "Member.findByUsername")
 	List<Member> findByUsername(@Param("username") String username);
