@@ -345,10 +345,10 @@ public class MemberRepositoryTest {
 		// then
 		Assertions.assertThat(result.size()).isEqualTo(1);
 	}
-	
+
 	@Test
 	public void queryByExample() {
-		
+
 		// given
 		Team teamA = new Team("teamA");
 		em.persist(teamA);
@@ -358,21 +358,37 @@ public class MemberRepositoryTest {
 		em.persist(m2);
 		em.flush();
 		em.clear();
-		
+
 		// when
-		//probe
+		// probe
 		Member member = new Member("m1");
 		Team team = new Team("teamA");
 		member.setTeam(team);
-		
-		ExampleMatcher matcher = ExampleMatcher.matching()
-				 .withIgnorePaths("age");
-		
-		Example<Member> example = Example.of(member,matcher);
-		
+
+		ExampleMatcher matcher = ExampleMatcher.matching().withIgnorePaths("age");
+
+		Example<Member> example = Example.of(member, matcher);
+
 		List<Member> result = memberRepository.findAll(example);
-		
+
 		// then
 		Assertions.assertThat(result.get(0).getUsername()).isEqualTo("m1");
+	}
+
+	@Test
+	public void projections() throws Exception {
+		// given
+		Team teamA = new Team("teamA");
+		em.persist(teamA);
+		Member m1 = new Member("m1", 0, teamA);
+		Member m2 = new Member("m2", 0, teamA);
+		em.persist(m1);
+		em.persist(m2);
+		em.flush();
+		em.clear();
+		// when
+		List<NestedClosedProjection> result = memberRepository.findProjectionsByUsername("m1",NestedClosedProjection.class);
+		// then
+		Assertions.assertThat(result.size()).isEqualTo(1);
 	}
 }
