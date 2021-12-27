@@ -24,7 +24,8 @@ import com.sun.source.tree.MemberReferenceTree;
 import study.datajpa.dto.MemberDto;
 import study.datajpa.entity.Member;
 
-public interface MemberRepository extends JpaRepository<Member, Long>, MemberRepositoryCustom, JpaSpecificationExecutor<Member> {
+public interface MemberRepository
+		extends JpaRepository<Member, Long>, MemberRepositoryCustom, JpaSpecificationExecutor<Member> {
 
 	// @Query(name = "Member.findByUsername")
 	List<Member> findByUsername(@Param("username") String username);
@@ -95,12 +96,21 @@ public interface MemberRepository extends JpaRepository<Member, Long>, MemberRep
 
 	@QueryHints(value = { @QueryHint(name = "org.hibernate.readOnly", value = "true") }, forCounting = true)
 	Page<Member> findByUsername(String name, Pageable pageable);
-	
-	//실시간 트래픽이 많은 서비스에서는 lock 금지
+
+	// 실시간 트래픽이 많은 서비스에서는 lock 금지
 	@Lock(LockModeType.PESSIMISTIC_WRITE)
 	List<Member> findLockByUsername(String name);
-	
-	//List<UsernameOnly> findProjectionsByUsername(String username);
-	
+
+	// List<UsernameOnly> findProjectionsByUsername(String username);
+
 	<T> List<T> findProjectionsByUsername(String username, Class<T> type);
+
+	@Query(value = "select * from member where username = ?", nativeQuery = true)
+	Member findByNativeQuery(String username);
+
+	@Query(value = "SELECT m.member_id as id, m.username, t.name as teamName " +
+			 "FROM member m left join team t",
+			 countQuery = "SELECT count(*) from member",
+			 nativeQuery = true)
+	Page<MemberProjection> findByNativeProjection(Pageable pageable);
 }
